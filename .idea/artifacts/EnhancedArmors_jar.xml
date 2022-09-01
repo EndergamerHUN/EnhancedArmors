@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="EnhancedArmors:jar">
+    <output-path>$PROJECT_DIR$/../_compiled</output-path>
+    <root id="archive" name="EnhancedArmors.jar">
+      <element id="module-output" name="EnhancedArmors" />
+    </root>
+  </artifact>
+</component>
