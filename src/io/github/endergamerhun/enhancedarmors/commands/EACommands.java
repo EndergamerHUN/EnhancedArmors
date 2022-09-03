@@ -1,8 +1,6 @@
 package io.github.endergamerhun.enhancedarmors.commands;
 
 import io.github.endergamerhun.enhancedarmors.items.ItemManager;
-import io.github.endergamerhun.enhancedarmors.utils.Util;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,7 +31,7 @@ public class EACommands implements CommandExecutor {
                     break;
                 }
 
-                if (!ItemManager.containsSet(args[1])) {
+                if (!ItemManager.setExists(args[1])) {
                     p.sendMessage("§cCould not find set with id '" + args[1] + "'.");
                     break;
                 }
@@ -61,7 +59,7 @@ public class EACommands implements CommandExecutor {
             // Lists every existing set
             case "list" -> {
                 sender.sendMessage("§aHere is the list of every set:");
-                for (String id : ItemManager.getSetList()) {
+                for (String id : ItemManager.getRegisteredSets()) {
                     sender.sendMessage("§8- §e" + id);
                 }
             }

@@ -22,7 +22,7 @@ public class TabCompletion implements TabCompleter {
             case 1 -> StringUtil.copyPartialMatches(args[0], COMMANDS, completions);
             case 2 -> {
                 if (args[0].equalsIgnoreCase("give")) {
-                    completions = Arrays.stream(ItemManager.getSetList()).toList();
+                    completions = Arrays.stream(ItemManager.getRegisteredSets()).toList();
                 }
 
             }

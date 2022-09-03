@@ -17,35 +17,46 @@ public class ItemManager {
 
     private static final Material[] ARMOR_TYPES = {Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS};
     private static final NamespacedKey KEY = new NamespacedKey(EnhancedArmors.getInstance(), "set");
-    private static final Hashtable<String, ItemStack[]> sets = new Hashtable<>();
+    private static final Hashtable<String, ItemStack[]> setContent = new Hashtable<>();
+    private static final Hashtable<String, Material[]> setMaterial = new Hashtable<>();
 
     public static ItemStack[] getSetItems(String s) {
-        return sets.get(s);
+        return setContent.get(s);
+    }
+    public static Material[] getSetMaterials(String s) {
+        return setMaterial.get(s);
     }
     public static int getSetSize(String s) {
-        return sets.get(s).length;
+        return setContent.get(s).length;
     }
 
-    public static boolean containsSet(String id) {
-        return sets.containsKey(id);
+    public static boolean setExists(String id) {
+        return setContent.containsKey(id);
     }
 
-    public static String[] getSetList() {
-        return sets.keySet().toArray(new String[0]);
+    public static String[] getRegisteredSets() {
+        return setContent.keySet().toArray(new String[0]);
     }
 
     public static boolean isSetPiece(ItemStack item) {
+        if (item.getType().isAir()) return false;
         PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
         return pdc.has(KEY, PersistentDataType.STRING);
     }
+
     public static String getItemId(ItemStack item) {
         PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
         return pdc.get(KEY, PersistentDataType.STRING);
     }
 
+
     public static void init() {
-        sets.put("miner", new ItemStack[]{createArmor("miner", Material.LEATHER_HELMET, Color.GRAY)});
-        sets.put("speed", createSet("speed", Color.WHITE, new boolean[]{false, false, true, true}));
+
+        createSet("miner", Color.GRAY, new boolean[]{true, false, false, false}, new Material[]{Material.GLOWSTONE, Material.DIAMOND, Material.OBSIDIAN});
+        createSet("speed", Color.WHITE, new boolean[]{false, false, true, true}, new Material[]{Material.ENDER_PEARL, Material.SUGAR});
+        createSet("magma", Color.RED, new boolean[]{true, true, false, true}, new Material[]{Material.LAVA_BUCKET, Material.OBSIDIAN, Material.MAGMA_CREAM});
+
+        RecipeManager.init();
     }
 
     private static ItemStack createArmor(String id, Material material, Color color) {
@@ -67,7 +78,7 @@ public class ItemManager {
         return item;
     }
 
-    private static ItemStack[] createSet(String id, Color color, boolean[] set) {
+    private static void createSet(String id, Color color, boolean[] set, Material[] material) {
         if (set.length != 4) throw new IllegalArgumentException("Set must contain 4 booleans");
 
         int size = 0;
@@ -81,6 +92,7 @@ public class ItemManager {
             items[count] = createArmor(id, ARMOR_TYPES[i], color);
             count++;
         }
-        return items;
+        setContent.put(id,items);
+        setMaterial.put(id,material);
     }
 }
