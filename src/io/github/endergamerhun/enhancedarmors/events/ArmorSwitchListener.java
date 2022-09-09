@@ -15,6 +15,33 @@ import java.util.Hashtable;
 
 public class ArmorSwitchListener implements Listener {
 
+    public static void checkArmor(Player p, String preCheck) {
+        final Hashtable<String, Integer> count = new Hashtable<>();
+        final ItemStack[] armor = p.getInventory().getArmorContents().clone();
+
+        if (preCheck != null) count.put(preCheck, 0);
+
+        for (ItemStack item : armor) {
+            if (item == null) continue;
+            if (item.getType().isAir()) continue;
+            if (!ItemManager.isSetPiece(item)) continue;
+
+            String id = ItemManager.getItemId(item);
+            if (!count.containsKey(id)) count.put(id, 1);
+            else count.replace(id, count.get(id) + 1);
+        }
+        for (String id : count.keySet()) {
+            if (count.get(id) < ItemManager.getSetSize(id)) {
+                ItemEffects.removeEffect(p, id);
+            } else {
+                ItemEffects.applyEffect(p, id);
+            }
+        }
+    }
+    public static void checkArmor(Player p) {
+        checkArmor(p, null);
+    }
+
     @EventHandler
     public static void onArmorChange(InventoryClickEvent e) {
         final Player p = (Player) e.getWhoClicked();
